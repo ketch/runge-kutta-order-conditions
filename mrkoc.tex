@@ -1,0 +1,117 @@
+We consider multistep Runge--Kutta methods of the form
+\begin{subequations} \label{eq:mrk-full}
+\begin{align}
+y_i^n & = \sum_{l=1}^{k} d_{il} u^{n-k+l} + \Dt\sum_{j=1}^s a_{ij} F(y_j^n) \\
+u^{n+1} & = \sum_{l=1}^{k} \theta_l u^{n-k+l} + \Dt\sum_{j=1}^s b_j F(y_j^n),
+\end{align}
+\end{subequations}
+where it is assumed that (for consistency)
+$$\sum_{l=1}^k d_{il} = 1 \ \ \ \ \sum_{l=1}^k \theta_l = 1.$$
+This form includes both Type I and Type II methods, but it must be remembered
+that $s$ is not an accurate indication of the cost of the method for
+Type II methods in this form.  More specifically,
+it is possible to include terms such as $F(u^{n-1})$ by having
+one of the stages equal to $u^{n-1}$ identically (like the Type II TSRK
+methods from our paper), and that in this
+case the cost of the method is generally less than $s$ function 
+evaluations.
+
+We write method \eqref{eq:mrk-full} as
+\begin{subequations} \label{eq:mrk}
+\begin{align} 
+\by^n & = \mD \bu^n + h \mA \bff^n \\
+u^{n+1} & = \btheta \bu^n + h \bb\transpose \bff^n
+\end{align}
+\end{subequations}
+where $\bu$ is the vector of previous step values 
+$$\bu = [u^{n-k+1}, u^{n-k+2},\dots, u^{n}].$$
+Then the true solution satisfies
+\begin{subequations} \label{eq:mrk_lte}
+\begin{align} 
+\bty^n & = \mD \btu^n + h \mA \btf^n + h \ste^n \\
+\tu^{n+1} & = \btheta \btu^n + h \bb\transpose\btf^n + h \lte^n.
+\end{align}
+\end{subequations}
+
+Using the Taylor expansions above, as well as
+\begin{align*}
+\tu(t_{n-1-r}) & = \tu(t_{n-1}) - r h \tu'(t_{n-1}) + \frac{1}{2} h^2 r^2 \tu''(t_{n-1}) + \cdots \\
+& = \sum_{k=0}^\infty \frac{1}{k!} h^k (-r)^k \tu^{(k)}(t_{n-1}),
+\end{align*}
+substitution gives
+\begin{subequations} \label{eq:mrk_ste}
+\begin{align}
+\ste & = \sum_{k=1}^\infty \ste_k h^{k-1} \tu^{(k)}(t_{n-1}) \\
+\lte^n & = \sum_{k=1}^\infty \lte_k h^{k-1} \tu^{(k)}(t_{n-1})
+\end{align}
+\end{subequations} 
+where
+\begin{subequations} 
+\begin{align} \label{eq:mrk_ste_coeffs}
+\ste_k & = \frac{1}{k!} \left(\bc^k-\mD(-\vl)^k\right) - \frac{1}{(k-1)!} \mA \bc^{k-1} \\
+\lte_k & = \frac{1}{k!}\left(1-\btheta\transpose(-\vl)^k\right) - \frac{1}{(k-1)!} \bb\transpose \bc^{k-1}
+\label{eq:mrk_te_coeffs}
+\end{align}
+\end{subequations} 
+and $\vl=[k-1,k-2,\dots,0].$  We assume consistency of the stages, which
+means $\ste_1=0$.  We take this condition to define the abscissas, which means we
+have stage order at least equal to one:
+\begin{align} \label{eq:mrk_cdef} 
+\bc & = \mA\ve -\mD\vl.
+\end{align}
+
+Subtracting \eqref{eq:mrk_lte} from \eqref{eq:mrk} gives
+\begin{subequations} \label{eq:mrk_gserr_series}
+\begin{align}
+\gserr^n & = \mD \gsteperr^n + h \mA \rhsserr^n - h \ste^n \\
+\gerr^{n+1} & = \btheta\transpose \gsteperr^n + h \bb\transpose \rhsserr^n - h \lte^n
+\end{align}
+\end{subequations}
+where $\gsteperr^n = [\gerr^{n-1},\gerr^{n-2},\dots,\gerr^{n-k}]$.
+
+Now we seek expressions for the global stage errors $\gserr$ and
+the stage derivative errors $\rhsserr$ of the form \eqref{eq:err_series}.
+%Since $\gsteperr=\Oop(h^p)$,
+Substituting \eqref{eq:rhserr_series} and \eqref{eq:mrk_ste}
+into \eqref{eq:mrk_gserr_series} yields %again \eqref{eq:gserr_rec},
+\begin{subequations} \label{eq:gserr_rec_mrk_both}
+\begin{align} \label{eq:gserr_rec_mrk}
+\gserr^n & =\mD \gsteperr^n + \sum_{k=0}^{p-1} \mA \rhsserr^n_k \Dt^{k+1} -\sum_{k=1}^{p} \ste_k \tu^{(k)}(t_{n}) \Dt^k + \Oop(\Dt^{p+1}) \\
+\gerr^{n+1} & = \btheta\transpose \gsteperr^n + \sum_{k=0}^{p-1} \bb\transpose\rhsserr^n_{k-1} \Dt^{k+1} -\sum_{k=1}^{p} \lte_k \tu^{(k)}(t_{n}) \Dt^k + \Oop(\Dt^{p+1}) 
+\end{align}
+\end{subequations}
+with $\ste_k$ given by \eqref{eq:mrk_ste_coeffs}.
+Assuming stable propagation of errors, we again have global accuracy of order $p$
+if 
+\begin{align*}    
+\lte_k & = 0  & \mbox{for }  & 0\le k\le p \\
+\bb\transpose\rhsserr^n_k & = 0 &  \mbox{for } & 0\le k\le p-1.
+\end{align*}
+Furthermore, we still have the expression \eqref{eq:triplesum} for $\rhsserr$.
+
+\subsection{Generation of stage derivative error vectors\label{recursion}}
+Combining \eqref{eq:gserr_series} with \eqref{eq:gserr_rec_mrk} and equating
+coefficients of powers of $\Dt$ gives again \eqref{eq:gserrk}.
+Hence we can again determine the vectors appearing in $\rhsserr_k$ recursively using
+\eqref{eq:triplesum} and \eqref{eq:gserrk}.  The only difference is that the stage truncation
+error vectors are now given by \eqref{eq:mrk_ste_coeffs}.  
+Hence the non-bushy tree order conditions for these methods are the same as those for
+Runge-Kutta methods, as enumerated in Section 2, except that the definitions of the stage truncation
+errors $\ste_k, \lte_k,$ and of the abscissas $\bc$ are given by \eqref{eq:mrk_ste_coeffs},
+\eqref{eq:mrk_te_coeffs}, and \eqref{eq:mrk_cdef}, respectively.
+Meanwhile, the bushy tree order conditions for order $p$ are (from \eqref{eq:mrk_te_coeffs}):
+\begin{align*}
+\frac{1}{k!}\left(1-\btheta\transpose(-\vl)^k\right) & = \frac{1}{(k-1)!}\bb\transpose \bc^{k-1} 
+            & \mbox{for } 1\le k\le p.%\\
+%\bb\transpose\bv & = 0 & \mbox{for all } \bv\in\rhsserr_k, \ \ \ \ \mbox{for } 1\le k\le p,
+\end{align*}
+%where
+%\begin{align}
+%\bc & = \mA\ve -\mD\vl,
+%\end{align}
+%\begin{align} 
+%\ste_k & = \frac{1}{k!} \left(\bc^k-\mD(-\vl)^k\right) - \frac{1}{(k-1)!} \mA \bc^{k-1},
+%\end{align}
+%and the $\rhsserr_k$ contain the following vectors:
+
+

@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\usepackage[T1]{fontenc}
+\linespread{1.05}         % Palatino needs more leading (space between lines)
+\usepackage[hmargin=1.0in]{geometry}
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+
+\bibliographystyle{apalike}
+
+\begin{document}
+
+\title{Order conditions for Runge-Kutta methods}
+\author{David I. Ketcheson} 
+\maketitle
+
+\input{macros}
+
+A Runge--Kutta method 
+$$
+u^{n+1} = u^n + \Delta t \sum_j b_j f(y_j, t^n + c_j \Dt)
+$$
+is like a quadrature rule with weights $b_j$ and
+abscissas $c_j$.  But the Runge--Kutta method is more complex, since 
+intermediate approximations must be performed to obtain the stage values
+$y_j$, meaning that the values $f(y_j)$ appearing in the quadrature formula
+are not exact derivatives of the
+solution.  The order conditions for Runge--Kutta methods are precisely 
+the necessary conditions to ensure that the resulting errors in the final
+approximation vanish up to a given order in $\Delta t$.
+
+\section{Derivation of the order conditions\label{sec:rkoc}}
+  \input{rkoc}
+
+\section{Enumeration of conditions}
+  \input{rkocenum}
+
+\section{Order conditions for dense output}
+Let us consider now continuous Runge--Kutta methods, which are equipped
+with an additional set of weights $b_j(\theta)$ such that
+\begin{align} \label{dense-output}
+    u^{n+\theta} & = u^n + \Dt \sum_{j=1}^s b_j(\theta) f(y_j) \approx u(t_n + \theta \Dt).
+\end{align}
+Here we are generally interested in values $0\le \theta \le 1$, i.e.\ the
+$\theta$-dependent weights are used to interpolate and provide output
+at an arbitrary time within a given step.  Formula \eqref{dense-output}
+is known as a {\em dense output} formula.  It avoids the need to ensure
+that the integration hits desired output times exactly.  Most importantly,
+it ensures that step sizes are determined only by accuracy and stability
+considerations, even if very frequent output is required.
+
+How accurate should the approximation \eqref{dense-output} be?
+At first glance, it seems like the dense output formula ought
+to have the same accuracy as that given by the regular weights (i.e., $p$).
+However, since the dense output will not be used to propagate the solution,
+and hence contributes only to local (not global) error, it is sufficient
+to require order $p-1$.
+
+What are the order conditions on the weights $b_j(\theta)$?  Here again
+we will follow Albrecht's approach.  The standard references use Butcher's
+approach and find that all of the order conditions become $\theta$-dependent.
+But with Albrecht's approach we will see that only the bushy-tree conditions
+depend on $\theta$.
+
+To derive the order conditions, we follow the analysis of Section~\ref{sec:rkoc},
+but in place of $u^{n+1}$ we consider the approximation $u^{n+\theta}$ above.
+We find that 
+\begin{align*}
+\tu(t_{n+\theta}) & = \tu^{n} + \Dt \bb(\theta)\transpose\btf^n + \Dt \lte^n(\theta)
+\end{align*}
+where
+\begin{align*}
+\lte^n(\theta) & = \sum_{k=1}^\infty \lte_k \Dt^{k-1} \tu^{(k)}(t_{n})
+\end{align*}
+where
+\begin{align*}
+\lte_k & = \frac{\theta^k}{k!} - \frac{1}{(k-1)!} \bb\transpose \bc^{k-1}
+\end{align*}
+Notice that everything but the $\lte_k$ is unchanged from our earlier
+analysis.  Thus the order conditions for order $p$ are
+\begin{align*}    
+\bb(\theta)\transpose \bc^{k-1} & = \frac{\theta^k}{k}  &  \mbox{for }  & 0\le k\le p \\
+\bb(\theta)\transpose\rhsserr^n_k & = 0 &  \mbox{for } & 0\le k\le p-1.
+\end{align*}
+As predicted, only the bushy-tree conditions are modified.
+Thus the vector $\bb(\theta)$ must lie, for every $\theta$, in the same
+subspace determined by orthogonality to the vectors $\rhsserr_k$.
+
+
+\bibliography{rk_order_conditions}
+
+\end{document}

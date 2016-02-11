@@ -1,0 +1,186 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+
+\usepackage[T1]{fontenc}
+\linespread{1.05}         % Palatino needs more leading (space between lines)
+\usepackage[hmargin=1.0in]{geometry}
+
+\bibliographystyle{apalike}
+
+\begin{document}
+
+\title{Order conditions for multistep Runge-Kutta methods}
+\author{David I. Ketcheson} 
+\maketitle
+
+\input{macros}
+
+\section{Review of Order Conditions for Runge--Kutta Methods}
+  \input{rkoc}
+
+\section{Enumeration of conditions}
+  \input{rkocenum}
+
+\section{Multistep Runge--Kutta Methods of Type I}
+  \input{mrkoc}
+
+\section{Spijker forms}
+The Spijker form for the Type I methods of the last section is
+\begin{align}
+\bx & = \left[u^{n-k+1},u^{n-k+2},\dots,u^{n-1},u^n\right] \\
+\by & = \left[u^{n-k+1},u^{n-k+2},\dots,u^{n-1},u^n,y_1,\dots,y_s,u^{n+1}\right] \\
+\mS & = \begin{pmatrix}\mI\\\mD\\\btheta\transpose\end{pmatrix} \ \ \ \
+\mT   = \begin{pmatrix}\mzero & \mzero & 0 \\ \mzero & \mA & \mzero \\ \mzero & \bb\transpose & 0 \end{pmatrix}.
+\end{align}
+
+We are also interested in Type II methods, which take the form
+\begin{subequations} \label{eq:mrk-typeII}
+\begin{align}
+y_i^n & = \sum_{l=1}^{k} d_{il} u^{n-k+l} + \Dt\sum_{l=1}^{k-1} \hat{a}_{il} F(u^{n-k+l}) + \Dt\sum_{j=1}^s a_{ij} F(y_j^n) \\
+u^{n+1} & = \sum_{l=1}^{k} \theta_l u^{n-k+l} + \Dt\sum_{l=1}^{k-1} \hat{b}_{l} F(u^{n-k+l}) + \Dt\sum_{j=1}^s b_j F(y_j^n),
+\end{align}
+\end{subequations}
+where $y_1^n=u^n$.  These admit the Spijker form
+\begin{align}
+\bx & = \left[u^{n-k+1},u^{n-k+2},\dots,u^{n-1},u^n\right] \\
+\by & = \left[u^{n-k+1},u^{n-k+2},\dots,u^{n-1},u^n,y_1=u^{n},y_2,\dots,y_s,u^{n+1}\right] \\
+\mS & = \begin{pmatrix}\mI \ \mzero \\ \mD \\\btheta\transpose \end{pmatrix} \ \ \ \
+\mT   = \begin{pmatrix}\mzero & \mzero & 0 \\ \mAh & \mA & \mzero \\ \bbh\transpose & \bb\transpose & 0 \end{pmatrix}.
+\end{align}
+Here the first row of $\mD$ is $(0,0,\dots,0,1)$ and the first row of
+$\mA,\mAh$ is identically zero.
+The order conditions presented above can also be applied to these Type II methods
+by writing them as Type I methods (simply introduce additional stages that are
+equal to the old steps).  {\bf David can write this last bit up if necessary.}
+
+\section{Methods for linear problems}
+In this section we consider only linear problems of the form $$u_t = L u,$$
+so that the order conditions simplify considerably.  This case is of 
+interest for several reasons.  First, linear problems are of interest in many 
+cases (cite Bernardo Cockburn), and it is possible to include a time-dependent 
+forcing term or boundary condition while maintaining the order of the method. 
+Second, up to second order  the order conditions for  linear and nonlinear
+problems are the same.  Thus, this approach will provide results for second 
+order multi-step multi-stage methods, which gives us a picture of the size 
+of the time-step for higher order nonlinear methods.  Finally, the time-step 
+restriction for the linear high order methods serves as an upper bound for 
+that of nonlinear high order methods. 
+
+\subsection{Tall Tree Order conditions for Multistep Runge--Kutta methods}
+For $k$-step Runge-Kutta methods of Type II,
+applying the method to the linear scalar homogeneous test equation, we
+find that it reduces to the iteration
+\be
+u^{n+1} = \left( \btheta\transpose + z \hat{\vb}\transpose + z \vb\transpose ( I-z\mA)^{-1} (\mD+z\hat{\mA}) \right) \vu
+\ee
+where
+\be
+\vu = \left(u^{n-k+1},u^{n-k+2},\dots,u^{n}\right)^T
+\ee
+and $\mAh,\vbh\transpose$ each have $k$ columns but the last column is zero.
+Using the Taylor expansions 
+\begin{subequations}
+\begin{align}
+\left( \mI - z\mA \right)^{-1}  & = \sum_{j=0}^\infty z^j \mA^j \\
+u^{n-\vl} = e^{-\vl\Dt}u^n  & = u^n \sum_{j=0}^\infty \frac{1}{j!} z^j (-l)^j
+\end{align}
+\end{subequations}
+we obtain the tall tree order conditions for linear problems.
+These are given by equating coefficients in
+\begin{align}
+e^z + \Oop(z^{p+1}) & = 
+    \left[ \btheta\transpose + z \bhT + z \bT
+    \left(\sum_{j=0}^\infty z^j \mA^j \right) (z + \mD \hat{\mA})\right]
+    \left(\sum_{j=0}^\infty \frac{1}{j!}z^j (-\vl)^j\right) \nonumber \\
+ & = \sum_{j=0}^\infty z^j {\huge(} \frac{(-1)^j}{j!} \btheta\transpose \vl^j
+    + \frac{(-1)^{j-1}}{(j-1)!}\bhT \vl^{j-1} \\
+    & + \bT \sum_{i=0}^{j-1}\frac{(-1)^i}{i!}\mA^{j-i-1}\mD\vl^i
+    + \frac{(-1)^{i-1}}{(i-1)!}\mA^{j-i}\hat{\mA}\vl^{i-1} \nonumber
+    {\huge)}
+\end{align}
+where $\vl=(k-1,k-2,\dots,0)\transpose$.
+{\em need to add something about terms with negative exponents
+being understood to be zero here}
+
+The resulting conditions are (given our assumption that $\mD\ve=\ve$ and 
+$\btheta\transpose\ve=1$):
+\begin{subequations}
+\begin{align}
+(\bT + \bhT)\ve - \btheta\transpose\vl & = 1 \\
+\bT\vc - \bhT\vl
+    + \frac{1}{2}\btheta\transpose\vl^2 & = \frac{1}{2} \\
+\bT(\mA\vc + \frac{1}{2}\mD\vl^2 - \mAh\vl) +\frac{1}{2}\bhT\vl^2 
+    - \frac{1}{6}\btheta\transpose\vl^3 & = \frac{1}{6}
+\end{align}
+\end{subequations}
+where
+$$ \vc = (\mA+\hat{\mA})\ve - \mD\vl.$$
+
+
+For $k$-step Runge-Kutta methods of Type I,
+the analysis is the same as that above, but with
+$\hat{\vb}=\mAh=0$.
+The first five order conditions in this case reduce to
+\begin{subequations}
+\label{2ndOCs}
+\begin{align}
+\vb^T \ve - \btheta\transpose \vl &= 1, \\
+\vb^T \vc + \frac{1}{2} \btheta\transpose \vl^2 & = \frac{1}{2}, \\
+\vb\transpose \left(\mA\vc + \frac{1}{2}\mD\vl^2\right) - \frac{1}{6} \btheta\transpose\vl^3 & = \frac{1}{6} \\
+\vb\transpose \left(\mA^2\vc + \frac{1}{2}\mA\mD\vl^2 - \frac{1}{6}\mD\vl^3\right) + \frac{1}{24} \btheta\transpose\vl^4 & = \frac{1}{24} \\
+\vb\transpose \left(\mA^3\vc + \frac{1}{2}\mA^2\mD\vl^2 - \frac{1}{6}\mA\mD\vl^3 + \frac{1}{24}\mD\vl^4\right) - \frac{1}{120} \btheta\transpose\vl^5 & = \frac{1}{120}
+\end{align}
+\end{subequations}
+where $\vc=\mA\ve-\mD\vl$.
+
+
+\subsection{Optimal SSP Multistep Runge--Kutta methods for linear problems}
+
+{\bf These are David's old results from 2007-2008.}
+SSP coefficients for optimal explicit methods of Type II are shown in Tables
+\ref{tbl-2order}-\ref{tbl-3order}.
+We have solved numerically the optimization problem of maximizing $r$ subject to
+(\ref{2ndOCs}) and (\ref{spijkermon}) for various values of $s,k$ with $p=2$
+(i.e., implicit methods of Type I).
+It appears (after some \verb fmincon  searches) that the optimal 2nd order 
+SSP implicit Runge-Kutta methods given in \cite{ferracina2008,ketcheson2008b} 
+are actually optimal over all second order $k$-step, 2-stage methods.
+
+\begin{table}
+\center
+\begin{tabular}{l|cccc} \hline
+s \ k & 2     & 3     & 4     & 5 \\ \hline
+2 & 0.707 & 0.809 & 0.860 &  \\
+3 & 0.817 & 0.879 & 0.911* & \\
+4 & 0.866 & 0.911 & 0.934 & \\
+5 & 0.894 & 0.930 &  & \\  \hline
+\end{tabular}
+\caption{Effective SSP coefficients $\ceff$ of optimal
+  explicit 2nd order $k$-step Runge-Kutta methods of type (explicit with
+  a zero row) (for both linear and nonlinear problems).}
+\label{tbl-2order}
+\end{table}
+
+
+\begin{table}
+\center
+\begin{tabular}{l|cccc} \hline
+s \ k & 2     & 3     & 4     & 5 \\ \hline
+2 & 0.366 & 0.556 & 0.622 & 0.622 \\
+3 & 0.550 & 0.667*& 0.667 & \\
+4 & 0.627 &       &       & \\
+5 & 0.677 & 0.679 & 0.679 & \\ 
+6 & 0.705 & 0.705 & 0.705      & \\ \hline
+\end{tabular}
+\caption{Effective SSP coefficients $\ceff$ of optimal
+  explicit 3rd order $k$-step Runge-Kutta methods of type (explicit with
+  a zero row) for linear problems.}
+\label{tbl-3order}
+\end{table}
+
+
+
+\bibliography{rk_order_conditions}
+
+\end{document}

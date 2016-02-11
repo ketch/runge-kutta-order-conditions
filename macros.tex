@@ -1,0 +1,156 @@
+
+\newtheorem{thm}{Theorem}
+\newtheorem{dfn}{Definition}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}{Corollary}
+%\newtheorem{proposition}{Proposition}
+%\newtheorem{result}{Result}
+%\newtheorem{proof}{Proof}
+%\newtheorem{conj}{Conjecture}
+\newcommand{\qh}{\hat{q}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\imh}{{i-\frac{1}{2}}}
+\newcommand{\iph}{{i+\frac{1}{2}}}
+\newcommand{\ipmh}{{i \pm \frac{1}{2}}}
+\newcommand{\jph}{{j+\frac{1}{2}}}
+\newcommand{\Aop}{{\cal A}}
+\newcommand{\Bop}{{\cal B}}
+\newcommand{\Wop}{{\cal W}}
+\newcommand{\Oop}{{\cal O}}
+\newcommand{\DQ}{\Delta Q}
+\newcommand{\Dq}{\Delta q}
+\newcommand{\Dx}{\Delta x}
+\newcommand{\Dy}{\Delta y}
+\newcommand{\Du}{\Delta u}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\Lop}{{\cal L}}
+\newcommand{\Sop}{{\cal S}}
+\newcommand{\Fop}{{\cal F}}
+\newcommand{\Dofr}{{\cal D}(r)}
+\newcommand{\Dt}{\Delta t}
+\newcommand{\bbA}{\mathbf{A}}
+\newcommand{\bbZ}{\mathbf{Z}}
+\newcommand{\bbK}{\mathbf{K}}
+\newcommand{\bbI}{\mathbf{I}}
+\newcommand{\bbb}{\bar{\mathbf{b}}}
+\newcommand{\bbe}{\mathbf{e}}
+\newcommand{\bbone}{\mathbf{1}}
+\newcommand{\lnorm}{\left\|}
+\newcommand{\rnorm}{\right\|}
+
+\newcommand{\dx}{\Delta x}
+\newcommand{\dt}{\Delta t}
+\newcommand{\aij}{\alpha_{i,j}}
+\newcommand{\bij}{\beta_{i,j}}
+\newcommand{\lt}{\tilde{L}}
+
+\newcommand{\hf}{\frac{1}{2}}
+\def\half{\frac{1}{2}}
+\newcommand{\fracStrut}{\rule[-1.0ex]{0pt}{3.1ex}}
+\newcommand{\hfs}{\ensuremath{\frac{1}{2}}\fracStrut}
+\newcommand{\scinot}[2]{\ensuremath{#1\times10^{#2}}}
+\newcommand{\dee}{\mathrm{d}}
+\newcommand{\dye}{\partial}
+\newcommand{\diff}[2]{\frac{\dee #1}{\dee #2}}
+\newcommand{\pdiff}[2]{\frac{\dye #1}{\dye #2}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Complex}{\mathbb{C}}
+% matrices
+\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\mA}{\m{A}}
+\newcommand{\mAb}{\bar{\m{A}}}
+\newcommand{\vah}{\hat{\v{a}}}
+\newcommand{\mAh}{\hat{\m{A}}}
+\newcommand{\mD}{\m{D}}
+\newcommand{\mS}{\m{S}}
+\newcommand{\mT}{\m{T}}
+\newcommand{\mR}{\m{R}}
+\newcommand{\mP}{\m{P}}
+\newcommand{\mM}{\m{M}}
+\newcommand{\mQ}{\m{Q}}
+\newcommand{\mI}{\m{I}}
+\newcommand{\mK}{\m{K}}
+\newcommand{\mL}{\m{L}}
+\newcommand{\mzero}{\m{0}}
+% these use the upgreek package to get non-italic greek, which doesn't
+% seem to work with \mathbf so these have to be setup manually to
+% match \m
+\newcommand{\matalpha}{\boldsymbol{\upalpha}}
+\newcommand{\matbeta}{\boldsymbol{\upbeta}}
+\newcommand{\mattheta}{\boldsymbol{\uptheta}}
+\newcommand{\mateta}{\boldsymbol{\upeta}}
+\newcommand{\matmu}{\boldsymbol{\upmu}}
+\newcommand{\matlambda}{\boldsymbol{\uplambda}}
+\newcommand{\matgamma}{\boldsymbol{\upgamma}}
+\newcommand{\matdelta}{\boldsymbol{\updelta}}
+% vectors
+\renewcommand{\v}[1]{\boldsymbol{#1}}
+\newcommand{\transpose}{^\mathrm{T}}
+\newcommand{\thT}{\mattheta\transpose}
+\newcommand{\bT}{\v{b}\transpose}
+\newcommand{\bh}{\hat{b}}
+\newcommand{\vbh}{\hat{\v{b}}}
+\newcommand{\bhT}{\hat{\v{b}}\transpose}
+\newcommand{\vb}{\v{b}}
+\newcommand{\vc}{\v{c}}
+\newcommand{\ve}{\v{e}}
+\newcommand{\vu}{\v{u}}
+\newcommand{\vl}{\boldsymbol{l}}
+\newcommand{\vv}{\v{v}}
+\newcommand{\vy}{\v{y}}
+\newcommand{\vd}{\v{d}}
+\newcommand{\va}{\v{a}}
+\newcommand{\vf}{\v{f}}
+\newcommand{\Matlab}{{\sc Matlab}\xspace}
+\newcommand{\BARON}{{\sc Baron}\xspace}
+\newcommand{\code}[1]{\textsf{#1}}
+% the SSP coefficient
+\newcommand{\sspcoef}{\mathcal{C}}
+\newcommand{\clin}{\sspcoef_{\textup{lin}}}
+\newcommand{\ceff}{\sspcoef_{\textup{eff}}}
+\newcommand{\DtFE}{\Dt_{\textup{FE}}}
+
+\newcommand{\Inc}{\textrm{Inc}}
+
+\newcommand{\ty}{\tilde{y}}
+\newcommand{\tu}{\tilde{u}}
+\newcommand{\pt}{\tilde{p}}
+\newcommand{\lte}{\tau}
+\newcommand{\ste}{\boldsymbol{\tau}}
+\newcommand{\bgamma}{\boldsymbol{\gamma}}
+\newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\bty}{\mathbf{\ty}}
+\newcommand{\btu}{\mathbf{\tilde{u}}}
+
+\newcommand{\gerr}{\epsilon}
+\newcommand{\gserr}{\boldsymbol{\epsilon}}
+\newcommand{\gsteperr}{\bar{\boldsymbol{\epsilon}}}
+\newcommand{\rhserr}{\delta}
+\newcommand{\rhsserr}{\boldsymbol{\delta}}
+\newcommand{\deltaset}{\bar{\boldsymbol{\delta}}}
+
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bFf}{\mathbf{F}}
+\newcommand{\bfb}{\mathbf{f}_u}
+\newcommand{\bfbt}{\tilde{\mathbf{f}}_u}
+\newcommand{\btf}{\mathbf{\tilde{f}}}
+\newcommand{\bone}{\mathbf{1}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bbh}{\hat{\mathbf{b}}}
+\newcommand{\bc}{\mathbf{c}}
+\newcommand{\bt}{\mathbf{t}}
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bfe}{\mathbf{e}}
+\newcommand{\mC}{\m{C}}
+
+\renewcommand{\v}[1]{\mathbf{#1}}

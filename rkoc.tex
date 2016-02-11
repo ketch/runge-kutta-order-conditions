@@ -1,0 +1,183 @@
+In this section we review the derivation of order conditions for Runge-Kutta
+methods via the approach due to Albrecht \cite{albrecht1996}.
+The basic notation is defined in section \ref{notation}.  A formula 
+for the global error in terms of the method coefficients is derived
+in section \ref{globerr}.  This leads to a recursion for determining the order 
+conditions, as explained in section \ref{recursion}.
+
+\subsection{Notation\label{notation}}
+Write the $n$th step of a Runge--Kutta method as
+\begin{subequations} \label{eq:rk}
+\begin{align} 
+\by^n & = u^{n}\ve + \Dt \mA \bff^{n} \\
+u^{n+1} & = u^{n} + \Dt \bb\transpose \bff^{n}
+\end{align}
+\end{subequations}
+where 
+\begin{align*}
+\by^n & = [y_1^n,\dots,y_s^n], \\
+\bff^n & = [F(y_1^n),\dots,F(y_s^n)]
+\end{align*}
+are the vector of stage values and stage derivatives, respectively.
+Let $u(t)$ denote the exact solution at time $t$ and define
+the stage time vector $t^{n+c}_i = t^n+c_i\Dt$ and
+the vectors of exact stage solution values and
+exact stage derivatives:
+\begin{align*}
+    \by(\bt^{n+c}) & = [u(t^n+c_1\Dt),\dots,u(t^n+c_s\Dt)], \\
+    \btf(\bt^{n+c}) & = [F(u(t^n+c_1\Dt)),\dots,F(u(t^n+c_s\Dt))].
+\end{align*}
+Next define the {\em truncation error} $\lte^n$ and
+{\em stage truncation errors} $\ste^n$ by
+\begin{subequations} \label{eq:rk_lte}
+\begin{align} 
+    \by(\bt^{n+c}) & = u(t^{n})\ve + \Dt \mA \bff(\bt^{n+c}) + \Dt \ste^n \\
+    u(t_{n+1}) & = u(t^{n}) + \Dt \bb\transpose\bff(\bt^{n+c}) + \Dt \lte^n.
+\end{align}
+\end{subequations}
+
+\subsection{Relation between the global and local errors\label{globerr}}
+To find formulas for the truncation errors, we make use of 
+the Taylor expansions
+\begin{subequations} \label{eq:taylor}
+\begin{align} 
+u(t_{n}+c_i\Dt) & = \sum_{k=0}^\infty \frac{1}{k!} \Dt^k c_i^k u^{(k)}(t_{n}) \\
+F(u(t_{n}+c_i\Dt)) & = \sum_{k=1}^\infty \frac{1}{(k-1)!} \Dt^{k-1} c_i^{k-1} u^{(k)}(t_{n})
+\end{align}
+\end{subequations}
+
+Substitution of \eqref{eq:taylor} into \eqref{eq:rk_lte} gives
+\begin{subequations} \label{eq:ste}
+\begin{align}
+\ste^n & = \sum_{k=1}^\infty \left( \frac{1}{k!} \bc^k - \frac{1}{(k-1)!} \mA \bc^{k-1}\right) \Dt^{k-1} u^{(k)}(t_{n}) = \sum_{k=1}^\infty \ste_k \Dt^{k-1} u^{(k)}(t_{n}) \\
+\lte^n & = \sum_{k=1}^\infty \left( \frac{1}{k!} - \frac{1}{(k-1)!} \bb\transpose \bc^{k-1}\right) \Dt^{k-1} u^{(k)}(t_{n}) = \sum_{k=1}^\infty \lte_k \Dt^{k-1} u^{(k)}(t_{n})
+\end{align}
+\end{subequations} 
+where 
+\begin{subequations} 
+\begin{align} \label{eq:ste_coeffs}
+\ste_k & = \frac{1}{k!} \bc^k - \frac{1}{(k-1)!} \mA \bc^{k-1} \\
+\lte_k & = \frac{1}{k!} - \frac{1}{(k-1)!} \bb\transpose \bc^{k-1}
+\end{align}
+\end{subequations} 
+
+Subtracting \eqref{eq:rk_lte} from \eqref{eq:rk} gives
+\begin{subequations} \label{eq:gserr_series}
+\begin{align}
+\gserr^n & = \gerr^{n} \ve + \Dt \mA \rhsserr^n - \Dt \ste^n \\
+\gerr^{n+1} & = \gerr^{n} + \Dt \bb\transpose \rhsserr^n - \Dt \lte^n,
+\end{align}
+\end{subequations}
+where $\gerr^{n+1}=u^{n+1}-u(t_{n+1})$ is the global error,
+$\gserr^n = \by^n-\by(\bt^{n+c})$, is the global stage error, and
+$\rhsserr^n = \bff^n-\bff(t^{n+c})$ is the stage derivative error.
+
+Next assume expansions for the stage derivative errors $\rhsserr^n$ and
+stage errors $\gserr^n$ as a power series in $\Dt$:
+\begin{subequations} \label{eq:err_series}
+\begin{align} \label{eq:rhserr_series}
+\rhsserr^n & = \sum_{k=0}^{\infty} \rhsserr_k^n \Dt^{k}, \\
+\gserr^n & = \sum_{k=0}^{\infty} \gserr_k^n \Dt^{k}.
+\label{eq:gserr_power_series}
+\end{align}
+\end{subequations}
+Then substituting the expansions \eqref{eq:rhserr_series} and \eqref{eq:ste}
+into the global error formula \eqref{eq:gserr_series} yields
+\begin{subequations} \label{eq:gserr_rec_both}
+\begin{align} \label{eq:gserr_rec}
+\gserr^n & = \gerr^n \ve + \sum_{k=0}^{p-1} \mA \rhsserr^n_k \Dt^{k+1} -\sum_{k=1}^{p} \ste_k u^{(k)}(t_{n}) \Dt^k + \Oop(\Dt^{p+1}) \\
+\gerr^{n+1} & = \gerr^n + \sum_{k=0}^{p-1} \bb\transpose\rhsserr^n_{k-1} \Dt^{k+1} -\sum_{k=1}^{p} \lte_k u^{(k)}(t_{n}) \Dt^k + \Oop(\Dt^{p+1}) 
+\end{align}
+\end{subequations}
+Assuming stable propagation of errors, we have global accuracy of order $p$
+if the following conditions hold:
+\begin{align*}    
+\lte_k & = 0  & \mbox{for }  & 1\le k\le p \\
+\bb\transpose\rhsserr^n_k & = 0 &  \mbox{for } & 0\le k\le p-1.
+\end{align*}
+The first set of conditions simply say that our quadrature rule would be of order $p$
+if the stage values were exact.
+The second set of conditions ensure that the errors due to the stage approximations
+cancel out up to order $p$.
+
+It remains to determine the vectors $\rhsserr^n_k$. In fact, 
+we can relate these recursively to the global stage error vectors $\gserr_k$.  First define
+\begin{align*}
+\bFf(\by,\bt) & = [F(y_1(t_1)),\dots,F(y_s(t_s))]\transpose.
+\end{align*}
+Then we have the Taylor series
+\begin{align*}
+    \bff^n =  \bFf(\by^n,\bt^{n+c}) & = \bff(\bt^{n+c}) + \sum_{j=1}^\infty \frac{1}{j!} (\by^n-\by(\bt^{n+c}))^j \cdot
+    \bFf^{(j)}(\by(\bt^{n+c}),\bt^{n+c}) \\
+    & = \bff(\bt^{n+c}) + \sum_{j=1}^\infty \frac{1}{j!} (\gserr^n)^j \cdot \bg_j(\bt^{n+c}),
+\end{align*}
+where 
+\begin{align*}
+\bFf^{(j)}(\by,\bt) = [F^{(j)}(y_1(t_1)),\dots,F^{(j)}(y_s(t_s))]\transpose, \\
+\bg_j(\bt) = [F^{(j)}(y(t_1)),\dots,F^{(j)}(y(t_s))]\transpose,
+\end{align*}
+and the dot product denotes componentwise multiplication. Thus
+\begin{align}
+  \rhsserr^n = \bff^n - \bff(\bt^{n+c}) = \sum_{j=1}^\infty \frac{1}{j!} (\gserr^n)^j \cdot
+          \bg_j(\bt^{n+c}).
+\end{align}
+Since
+\begin{align}
+    \bg_j(\bt^{n+c}) & = \sum_{l=0}^\infty \frac{\Dt^l}{l!} \mC^l \bg_j^{(l)}(t_{n}),
+\end{align}
+where $\mC=\textup{diag}(\bc)$, we finally obtain the desired expansion:
+\begin{align} \label{eq:triplesum}
+\rhsserr^n_k & = \sum_{j=1}^\infty \frac{\Dt^k}{j!k!} \mC^k (\gserr^n)^j \cdot \bg_j^{(k)}(t_{n}).
+\end{align}
+
+\subsection{Generation of stage derivative error vectors\label{recursion}}
+Combining \eqref{eq:gserr_power_series} with \eqref{eq:gserr_rec} and equating
+coefficients of powers of $\Dt$ gives (for $k\ge 1$)
+\begin{align} \label{eq:gserrk}
+\gserr^n_k & = \mA \rhsserr^n_{k-1} - \ste_k \tu^{(k)}(t^n).
+\end{align}
+
+To determine the coefficients $\rhsserr_k$, we alternate recursively 
+between \eqref{eq:triplesum} and \eqref{eq:gserrk}.
+Typically, the abscissas $\vc$ are chosen as $\mA\ve$ so that $\ste_1=0$; 
+we will assume this since it simplifies the conditions considerably.
+
+The terms appearing in the $\rhsserr_k$ involve products of certain constants
+with derivatives of $\tu$ and the Butcher coefficients.  In order for $\bb\transpose \delta_k$
+to vanish for arbitrary $\tu$, it must be that $\bb\transpose \bv = 0$ for each vector $\bv$
+appearing in $\rhsserr_k$.  Since this latter condition does not depend on $|\bv|$,
+the constants and the derivatives of $\tu$ can be neglected in our analysis.
+Hence we focus solely on the vectors appearing in $\rhsserr_k$ depending on the 
+Butcher coefficients.  We use the symbol $\deltaset_k$ to denote the set of these vectors.
+Then the order conditions for order $p$ can be summarized as follows:
+\begin{subequations}
+\begin{align}\label{eq:bushy}
+\frac{1}{k!} & = \frac{1}{(k-1)!}\bb\transpose \bc^{k-1} 
+            & \mbox{for } 1\le k\le p \\
+\bb\transpose\bv & = 0 & \mbox{for all } \bv\in\deltaset_k, \ \ \ \ \mbox{for } 1\le k\le p-1.
+\label{eq:nonbushy}
+\end{align}
+\end{subequations}
+%where $\bc=\mA\ve$ and
+%\begin{align} 
+%\ste_k & = \frac{1}{k!} \bc^k - \frac{1}{(k-1)!} \mA \bc^{k-1}.
+%\end{align}
+The conditions \eqref{eq:bushy} are referred to as {\em bushy-tree order conditions}
+because they are associated with the bushy trees in Butcher's approach \cite{butcher2003}.
+It is convenient to refer to the order conditions \eqref{eq:nonbushy} as {\em non-bushy-tree
+order conditions}; the remainder of the section focuses on the task of determining these
+explicitly.
+Also $\rhsserr_0=0$ for any consistent method. Then taking $k=1$
+in \eqref{eq:gserrk} gives $\gserr_1=0$.  Plugging this into \eqref{eq:triplesum}
+yields $\rhsserr_1=0$.
+
+Taking $k=2$ in \eqref{eq:gserrk}, we see that the factor $\ste_2$ appears in $\gserr_2$.
+Plugging this into \eqref{eq:triplesum}, we see that $\ste_2$ appears in $\deltaset_2$.
+Using this (with $k=3$) in \eqref{eq:gserrk}, we have that $\mA\ste_2$ and $\ste_3$
+appear in $\gserr_3$.  Substituting this into \eqref{eq:triplesum} reveals that terms
+proportional to $\mC\ste_2, \mA\ste_2, \ste_3$ appear in $\deltaset_3$.
+
+Proceeding in this manner, the order conditions for any order of accuracy can be obtained.
+
+
+
