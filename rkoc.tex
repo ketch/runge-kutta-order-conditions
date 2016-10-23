@@ -31,8 +31,8 @@ Next define the {\em truncation error} $\lte^n$ and
 {\em stage truncation errors} $\ste^n$ by
 \begin{subequations} \label{eq:rk_lte}
 \begin{align} 
-    \by(\bt^{n+c}) & = u(t^{n})\ve + \Dt \mA \bff(\bt^{n+c}) + \Dt \ste^n \\
-    u(t_{n+1}) & = u(t^{n}) + \Dt \bb\transpose\bff(\bt^{n+c}) + \Dt \lte^n.
+    \by(\bt^{n+c}) & = u(t^{n})\ve + \Dt \mA \btf(\bt^{n+c}) + \Dt \ste^n \\
+    u(t_{n+1}) & = u(t^{n}) + \Dt \bb\transpose\btf(\bt^{n+c}) + \Dt \lte^n.
 \end{align}
 \end{subequations}
 
@@ -41,16 +41,16 @@ To find formulas for the truncation errors, we make use of
 the Taylor expansions
 \begin{subequations} \label{eq:taylor}
 \begin{align} 
-u(t_{n}+c_i\Dt) & = \sum_{k=0}^\infty \frac{1}{k!} \Dt^k c_i^k u^{(k)}(t_{n}) \\
-F(u(t_{n}+c_i\Dt)) & = \sum_{k=1}^\infty \frac{1}{(k-1)!} \Dt^{k-1} c_i^{k-1} u^{(k)}(t_{n})
+u(t^{n}+c_i\Dt) & = \sum_{k=0}^\infty \frac{1}{k!} \Dt^k c_i^k u^{(k)}(t^{n}) \\
+F(u(t^{n}+c_i\Dt)) & = \sum_{k=1}^\infty \frac{1}{(k-1)!} \Dt^{k-1} c_i^{k-1} u^{(k)}(t^{n})
 \end{align}
 \end{subequations}
 
 Substitution of \eqref{eq:taylor} into \eqref{eq:rk_lte} gives
 \begin{subequations} \label{eq:ste}
 \begin{align}
-\ste^n & = \sum_{k=1}^\infty \left( \frac{1}{k!} \bc^k - \frac{1}{(k-1)!} \mA \bc^{k-1}\right) \Dt^{k-1} u^{(k)}(t_{n}) = \sum_{k=1}^\infty \ste_k \Dt^{k-1} u^{(k)}(t_{n}) \\
-\lte^n & = \sum_{k=1}^\infty \left( \frac{1}{k!} - \frac{1}{(k-1)!} \bb\transpose \bc^{k-1}\right) \Dt^{k-1} u^{(k)}(t_{n}) = \sum_{k=1}^\infty \lte_k \Dt^{k-1} u^{(k)}(t_{n})
+\ste^n & = \sum_{k=1}^\infty \left( \frac{1}{k!} \bc^k - \frac{1}{(k-1)!} \mA \bc^{k-1}\right) \Dt^{k-1} u^{(k)}(t^{n}) = \sum_{k=1}^\infty \ste_k \Dt^{k-1} u^{(k)}(t^{n}) \\
+\lte^n & = \sum_{k=1}^\infty \left( \frac{1}{k!} - \frac{1}{(k-1)!} \bb\transpose \bc^{k-1}\right) \Dt^{k-1} u^{(k)}(t^{n}) = \sum_{k=1}^\infty \lte_k \Dt^{k-1} u^{(k)}(t^{n})
 \end{align}
 \end{subequations} 
 where 
@@ -68,7 +68,7 @@ Subtracting \eqref{eq:rk_lte} from \eqref{eq:rk} gives
 \gerr^{n+1} & = \gerr^{n} + \Dt \bb\transpose \rhsserr^n - \Dt \lte^n,
 \end{align}
 \end{subequations}
-where $\gerr^{n+1}=u^{n+1}-u(t_{n+1})$ is the global error,
+where $\gerr^{n+1}=u^{n+1}-u(t^{n+1})$ is the global error,
 $\gserr^n = \by^n-\by(\bt^{n+c})$, is the global stage error, and
 $\rhsserr^n = \bff^n-\bff(t^{n+c})$ is the stage derivative error.
 
@@ -85,8 +85,8 @@ Then substituting the expansions \eqref{eq:rhserr_series} and \eqref{eq:ste}
 into the global error formula \eqref{eq:gserr_series} yields
 \begin{subequations} \label{eq:gserr_rec_both}
 \begin{align} \label{eq:gserr_rec}
-\gserr^n & = \gerr^n \ve + \sum_{k=0}^{p-1} \mA \rhsserr^n_k \Dt^{k+1} -\sum_{k=1}^{p} \ste_k u^{(k)}(t_{n}) \Dt^k + \Oop(\Dt^{p+1}) \\
-\gerr^{n+1} & = \gerr^n + \sum_{k=0}^{p-1} \bb\transpose\rhsserr^n_{k-1} \Dt^{k+1} -\sum_{k=1}^{p} \lte_k u^{(k)}(t_{n}) \Dt^k + \Oop(\Dt^{p+1}) 
+\gserr^n & = \gerr^n \ve + \sum_{k=0}^{p-1} \mA \rhsserr^n_k \Dt^{k+1} -\sum_{k=1}^{p} \ste_k u^{(k)}(t^{n}) \Dt^k + \Oop(\Dt^{p+1}) \\
+\gerr^{n+1} & = \gerr^n + \sum_{k=0}^{p-1} \bb\transpose\rhsserr^n_{k-1} \Dt^{k+1} -\sum_{k=1}^{p} \lte_k u^{(k)}(t^{n}) \Dt^k + \Oop(\Dt^{p+1}) 
 \end{align}
 \end{subequations}
 Assuming stable propagation of errors, we have global accuracy of order $p$
@@ -103,7 +103,7 @@ cancel out up to order $p$.
 It remains to determine the vectors $\rhsserr^n_k$. In fact, 
 we can relate these recursively to the global stage error vectors $\gserr_k$.  First define
 \begin{align*}
-\bFf(\by,\bt) & = [F(y_1(t_1)),\dots,F(y_s(t_s))]\transpose.
+\bFf(\by,\bt) & = [F(y_1(t^n+c_1 \Delta t)),\dots,F(y_s(t^n + c_s \Delta t))]\transpose.
 \end{align*}
 Then we have the Taylor series
 \begin{align*}
@@ -113,8 +113,8 @@ Then we have the Taylor series
 \end{align*}
 where 
 \begin{align*}
-\bFf^{(j)}(\by,\bt) = [F^{(j)}(y_1(t_1)),\dots,F^{(j)}(y_s(t_s))]\transpose, \\
-\bg_j(\bt) = [F^{(j)}(y(t_1)),\dots,F^{(j)}(y(t_s))]\transpose,
+\bFf^{(j)}(\by,\bt) = [F^{(j)}(y_1(t^n + c_1\Delta t)),\dots,F^{(j)}(y_s(t^n + c_s \Delta t))]\transpose, \\
+\bg_j(\bt) = [F^{(j)}(y(t^n + c_1 \Delta t)),\dots,F^{(j)}(y(t^n + c_s \Delta t))]\transpose,
 \end{align*}
 and the dot product denotes componentwise multiplication. Thus
 \begin{align}
@@ -123,11 +123,11 @@ and the dot product denotes componentwise multiplication. Thus
 \end{align}
 Since
 \begin{align}
-    \bg_j(\bt^{n+c}) & = \sum_{l=0}^\infty \frac{\Dt^l}{l!} \mC^l \bg_j^{(l)}(t_{n}),
+    \bg_j(\bt^{n+c}) & = \sum_{l=0}^\infty \frac{\Dt^l}{l!} \mC^l \bg_j^{(l)}(t^{n}),
 \end{align}
 where $\mC=\textup{diag}(\bc)$, we finally obtain the desired expansion:
 \begin{align} \label{eq:triplesum}
-\rhsserr^n_k & = \sum_{j=1}^\infty \frac{\Dt^k}{j!k!} \mC^k (\gserr^n)^j \cdot \bg_j^{(k)}(t_{n}).
+    \sum_{k=0}^\infty \rhsserr^n_k & = \sum_{k=0}^\infty \sum_{j=1}^\infty \frac{\Dt^k}{j!k!} \mC^k (\gserr^n)^j \cdot \bg_j^{(k)}(t^{n}).
 \end{align}
 
 \subsection{Generation of stage derivative error vectors\label{recursion}}
